@@ -25,7 +25,7 @@
         @click="gameMode = 'hard'"
         v-bind:color="gameMode === 'hard' ? 'blue' : 'transparent'"
         class="ml-6"
-        >32 на 32</v-btn
+        >32 на 16</v-btn
       >
       <v-btn
         class="ml-6"

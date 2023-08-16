@@ -7,7 +7,7 @@
     <SapperGame
       v-if="gameStatus !== 'settings'"
       @setGameStatus="gameStatus = $event"
-      :gameSettings="gameSettings"
+      :settings="settings"
     />
   </v-container>
 </template>
@@ -16,7 +16,6 @@
 import SapperSettings from "@/components/Sapper/SapperSettings.vue";
 import SapperGame from "@/components/Sapper/SapperGame.vue";
 import { defineComponent } from "vue";
-import { SapperGameConstructor } from "@/models/SapperGameConstructor";
 
 export default defineComponent({
   components: {
@@ -26,7 +25,7 @@ export default defineComponent({
   data() {
     return {
       gameStatus: "settings",
-      gameSettings: {},
+      settings: {},
     };
   },
   methods: {
@@ -34,13 +33,7 @@ export default defineComponent({
       gameMode: string;
       customSettings: { rows: number; columns: number; mines: number };
     }) {
-      console.log(
-        new SapperGameConstructor(settings.gameMode, settings.customSettings)
-      );
-      this.gameSettings = new SapperGameConstructor(
-        settings.gameMode,
-        settings.customSettings
-      );
+      this.settings = settings;
       this.gameStatus = "game";
     },
   },
