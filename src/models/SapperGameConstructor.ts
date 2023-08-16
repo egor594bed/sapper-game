@@ -105,40 +105,38 @@ export class SapperGameConstructor {
   }
 
   private openCells(x: number, y: number) {
-    if (!this.cells[x][y].isOpen || this.cells[x][y].aroundMines > 0) return;
+    if (!this.cells[y][x].isOpen || this.cells[y][x].aroundMines > 0) return;
 
-    const arr = new Set([`${x}:${y}`]);
+    const arr = new Set([`${y}:${x}`]);
     const opened = new Set();
     let notOpened = 0;
 
     const searchAndOpen = (x: number, y: number) => {
       for (let i = x - 1; i <= x + 1; i++) {
         for (let j = y - 1; j <= y + 1; j++) {
-          console.log(i, j);
-          if (!this.validateCell(i, j)) continue;
+          if (!this.validateCell(j, i)) continue;
 
-          const cell = this.cells[i][j];
+          const cell = this.cells[j][i];
           if (cell.isOpen || cell.flag !== "") continue;
 
           cell.open();
 
           if (cell.aroundMines === 0) {
-            arr.add(`${i}:${j}`);
+            arr.add(`${cell.y}:${cell.x}`);
           }
         }
       }
-      opened.add(`${x}:${y}`);
-      arr.delete(`${x}:${y}`);
+      opened.add(`${y}:${x}`);
+      arr.delete(`${y}:${x}`);
     };
     while (arr.size > 0) {
-      console.log(arr);
       const [coords] = arr.values();
-      searchAndOpen(Number(coords.split(":")[0]), Number(coords.split(":")[1]));
+      searchAndOpen(Number(coords.split(":")[1]), Number(coords.split(":")[0]));
     }
   }
 
   private checkMines(x: number, y: number) {
-    if (this.cells[x][y].isMine && this.cells[x][y].isOpen) {
+    if (this.cells[y][x].isMine && this.cells[y][x].isOpen) {
       this.gameOver();
     }
 
@@ -179,9 +177,9 @@ export class SapperGameConstructor {
   private createCells() {
     const newField: SapperCellConstructor[][] = [];
 
-    for (let i = 0; i < this.rows; i++) {
+    for (let i = 0; i < this.columns; i++) {
       newField.push([]);
-      for (let j = 0; j < this.columns; j++) {
+      for (let j = 0; j < this.rows; j++) {
         const cell = new SapperCellConstructor(j, i, false, 0);
         newField[i].push(cell);
       }
@@ -193,8 +191,8 @@ export class SapperGameConstructor {
     }
 
     for (let i = 0; i < this.mines; i++) {
-      const x = Math.floor(Math.random() * this.rows);
-      const y = Math.floor(Math.random() * this.columns);
+      const x = Math.floor(Math.random() * this.columns);
+      const y = Math.floor(Math.random() * this.rows);
       if (newField[x][y]?.isMine) {
         i--;
         continue;
@@ -206,9 +204,9 @@ export class SapperGameConstructor {
         for (let k = y - 1; k <= y + 1; k++) {
           if (
             j >= 0 &&
-            j < this.rows &&
+            j < this.columns &&
             k >= 0 &&
-            k < this.columns &&
+            k < this.rows &&
             !newField[j][k]?.isMine
           ) {
             newField[j][k].aroundMines++;
