@@ -8,7 +8,7 @@
     elevation="4"
   >
     <v-card-title class="text-h5 text-center mb-5">Настройка игры</v-card-title>
-    <div class="d-flex justify-center">
+    <v-tabs>
       <v-btn
         @click="gameMode = 'easy'"
         v-bind:color="gameMode === 'easy' ? 'blue' : 'transparent'"
@@ -33,7 +33,7 @@
         v-bind:color="gameMode === 'custom' ? 'blue' : 'transparent'"
         >Свой размер</v-btn
       >
-    </div>
+    </v-tabs>
     <v-expand-transition>
       <div v-show="gameMode === 'custom'">
         <div class="d-flex justify-space-between pa-5 pb-0">

@@ -1,7 +1,7 @@
 <template>
   <v-card
     width="100%"
-    max-width="600px"
+    max-width="750px"
     color="grey-lighten-5"
     class="mx-auto pa-5"
     rounded
@@ -9,7 +9,7 @@
   >
     <p
       class="text-h5 text-center mb-5"
-      v-bind:class="
+      :class="
         game.status === 'win'
           ? 'text-green'
           : game.status === 'gameover'
@@ -27,7 +27,10 @@
         >{{ game.minesCounter }}
       </v-card>
     </div>
-    <div class="mb-5" id="gamefield">
+    <div
+      :class="game.status !== 'game' ? 'mb-5 disabled' : 'mb-5'"
+      id="gamefield"
+    >
       <v-sheet v-for="row in game.cells" class="d-flex" width="100%">
         <v-sheet v-for="cell in row">
           <SapperCell
@@ -52,6 +55,9 @@
 import { defineComponent } from "vue";
 import SapperCell from "@/components/Sapper/SapperCell.vue";
 import { SapperGameConstructor } from "@/models/SapperGameConstructor";
+import { useLeaderBoardStore } from "@/stores/leaderBoardStore";
+
+// const leaderBoardStore = useLeaderBoardStore()
 
 export default defineComponent({
   components: {
@@ -61,6 +67,7 @@ export default defineComponent({
     game: {} as SapperGameConstructor,
     timer: 0,
     gamefieldWidth: 0,
+    leaderBoardStore: useLeaderBoardStore(),
   }),
   props: {
     settings: {
@@ -72,7 +79,7 @@ export default defineComponent({
   methods: {
     updateGame(coords: { x: number; y: number }) {
       this.game.cellHasBeenUpdated(coords.x, coords.y);
-      this.game = this.game.getGameCopy();
+      // this.game = this.game.getGameCopy();
     },
     restartGame() {
       this.game = new SapperGameConstructor(
@@ -106,11 +113,29 @@ export default defineComponent({
     timer: {
       handler() {
         if (this.timer === 1) {
-          this.game.status = "gameover";
+          this.game.gameOver();
         }
       },
+    },
+    game: {
+      handler() {
+        if (this.game.status === "win") {
+          this.leaderBoardStore.saveNewWinner(
+            this.settings.gameMode,
+            "Гость",
+            this.game.timer - this.timer
+          );
+        }
+      },
+      deep: true,
     },
   },
   emits: ["startGame", "setGameStatus"],
 });
 </script>
+
+<style scoped>
+.disabled {
+  pointer-events: none;
+}
+</style>

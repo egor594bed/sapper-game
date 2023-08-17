@@ -6,7 +6,9 @@ export class SapperGameConstructor {
   mines: number = 0;
   rows: number = 8;
   columns: number = 8;
-  minesCounter = 0;
+  minesCounter: number = 0;
+  minesWithFlag: number = 0;
+  closedCells: number = 0;
   status: string = "game";
   cells: SapperCellConstructor[][] = [];
   colors: string[] = [
@@ -31,7 +33,6 @@ export class SapperGameConstructor {
         this.minesCounter = 40;
         this.rows = 16;
         this.columns = 16;
-        this.createCells();
         break;
       }
       case "hard": {
@@ -40,7 +41,6 @@ export class SapperGameConstructor {
         this.minesCounter = 99;
         this.rows = 32;
         this.columns = 16;
-        this.createCells();
         break;
       }
       case "custom": {
@@ -49,37 +49,25 @@ export class SapperGameConstructor {
         this.minesCounter = customSettings.mines;
         this.rows = customSettings.rows;
         this.columns = customSettings.columns;
-        this.createCells();
         break;
-      }
-      case "copy": {
       }
       default: {
         this.timer = 60 * 10;
         this.mines = 10;
         this.minesCounter = 10;
-        this.createCells();
         break;
       }
     }
-  }
-
-  getGameCopy() {
-    const newCopy = new SapperGameConstructor("copy");
-    newCopy.cells = this.cells;
-    newCopy.mines = this.mines;
-    newCopy.minesCounter = this.minesCounter;
-    newCopy.timer = this.timer;
-    newCopy.status = this.status;
-    newCopy.rows = this.rows;
-    newCopy.columns = this.columns;
-
-    return newCopy;
+    this.closedCells = this.rows * this.columns;
+    this.createCells();
   }
 
   cellHasBeenUpdated(x: number, y: number) {
     this.checkMines(x, y);
+    if (this.status === "gameover") return;
     this.openCells(x, y);
+
+    this.checkWin();
   }
 
   getGameStatus() {
@@ -98,6 +86,17 @@ export class SapperGameConstructor {
     }
   }
 
+  gameOver() {
+    this.status = "gameover";
+    for (let i = 0; i < this.cells[0].length; i++) {
+      for (let j = 0; j < this.cells.length; j++) {
+        if (this.cells[j][i].isMine) {
+          this.cells[j][i].open();
+        }
+      }
+    }
+  }
+
   private validateCell(x: number, y: number) {
     if (x < 0 || x >= this.cells.length) return false;
     if (y < 0 || y >= this.cells[0].length) return false;
@@ -105,11 +104,11 @@ export class SapperGameConstructor {
   }
 
   private openCells(x: number, y: number) {
+    if (this.cells[y][x].isOpen) this.closedCells--;
     if (!this.cells[y][x].isOpen || this.cells[y][x].aroundMines > 0) return;
 
     const arr = new Set([`${y}:${x}`]);
     const opened = new Set();
-    let notOpened = 0;
 
     const searchAndOpen = (x: number, y: number) => {
       for (let i = x - 1; i <= x + 1; i++) {
@@ -120,6 +119,7 @@ export class SapperGameConstructor {
           if (cell.isOpen || cell.flag !== "") continue;
 
           cell.open();
+          this.closedCells--;
 
           if (cell.aroundMines === 0) {
             arr.add(`${cell.y}:${cell.x}`);
@@ -129,6 +129,7 @@ export class SapperGameConstructor {
       opened.add(`${y}:${x}`);
       arr.delete(`${y}:${x}`);
     };
+
     while (arr.size > 0) {
       const [coords] = arr.values();
       searchAndOpen(Number(coords.split(":")[1]), Number(coords.split(":")[0]));
@@ -138,39 +139,34 @@ export class SapperGameConstructor {
   private checkMines(x: number, y: number) {
     if (this.cells[y][x].isMine && this.cells[y][x].isOpen) {
       this.gameOver();
+      return;
     }
 
-    let minesCounterCheck = 0;
     let flags = 0;
+    this.minesWithFlag = 0;
 
     for (let i = 0; i < this.cells[0].length; i++) {
       for (let j = 0; j < this.cells.length; j++) {
-        // if (!this.validateCell(i, j)) continue;
         if (this.cells[j][i].flag === "flag") {
           this.minesCounter--;
           flags++;
           if (this.cells[j][i].isMine) {
-            minesCounterCheck++;
+            this.minesWithFlag++;
           }
         }
       }
     }
 
     this.minesCounter = this.mines - flags;
-
-    if (minesCounterCheck === this.mines && this.minesCounter === 0) {
-      this.status = "win";
-    }
   }
 
-  private gameOver() {
-    this.status = "gameover";
-    for (let i = 0; i < this.cells[0].length; i++) {
-      for (let j = 0; j < this.cells.length; j++) {
-        if (this.cells[j][i].isMine) {
-          this.cells[j][i].open();
-        }
-      }
+  private checkWin() {
+    if (
+      (this.minesWithFlag === this.mines && this.minesCounter === 0) ||
+      this.closedCells - this.mines + (this.mines - this.minesWithFlag) ===
+        this.mines - this.minesWithFlag
+    ) {
+      this.status = "win";
     }
   }
 
@@ -216,6 +212,6 @@ export class SapperGameConstructor {
       }
     }
 
-    this.cells = [...newField];
+    this.cells = newField;
   }
 }
