@@ -66,16 +66,14 @@ export default defineComponent({
     },
   },
   methods: {
-    update() {
-      this.$emit("update", { x: this.cell.x, y: this.cell.y });
+    update(action: "open" | "flag") {
+      this.$emit("update", { x: this.cell.x, y: this.cell.y, action: action });
     },
     openCell() {
-      this.cell.open();
-      this.update();
+      this.update("open");
     },
     changeFlag() {
-      this.cell.setFlag();
-      this.update();
+      this.update("flag");
     },
   },
   emits: ["update"],

@@ -6,6 +6,16 @@ export class SapperCellConstructor {
   isMine: boolean;
   isOpen: boolean = false;
   flag: "flag" | "maybe" | "" = "";
+  colors: string[] = [
+    "blue",
+    "green",
+    "red",
+    "dark-blue",
+    "brown",
+    "turquoise",
+    "black",
+    "white",
+  ];
 
   constructor(x: number, y: number, isMine: boolean, aroundMines: number) {
     this.x = x;
@@ -15,8 +25,9 @@ export class SapperCellConstructor {
   }
 
   open() {
-    this.isOpen = true;
+    this.color = this.colors[this.aroundMines - 1];
     this.flag = "";
+    this.isOpen = true;
   }
 
   setFlag() {

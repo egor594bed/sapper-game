@@ -74,8 +74,8 @@ export default defineComponent({
     },
   },
   methods: {
-    updateGame(coords: { x: number; y: number }) {
-      this.game.cellHasBeenUpdated(coords.x, coords.y);
+    updateGame(settings: { x: number; y: number; action: "open" | "flag" }) {
+      this.game.updateCell(settings.x, settings.y, settings.action);
     },
     restartGame() {
       this.game = new SapperGameConstructor(
@@ -85,6 +85,9 @@ export default defineComponent({
       this.timer = this.game.timer;
       this.timeTick();
     },
+
+    //ПРОВЕРИТЬ ТАЙМЕР ПРИ ПЕРЕЗАПУСКЕ
+
     timeTick() {
       if (this.game.status !== "game") return;
       setTimeout(() => {

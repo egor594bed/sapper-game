@@ -2,6 +2,7 @@ import { type ICustomSettings } from "@/types/customSettings";
 import { SapperCellConstructor } from "./SapperCellConstructor";
 
 export class SapperGameConstructor {
+  status: string = "game";
   timer: number = 0;
   mines: number = 0;
   rows: number = 8;
@@ -9,18 +10,8 @@ export class SapperGameConstructor {
   minesCounter: number = 0;
   minesWithFlag: number = 0;
   closedCells: number = 0;
-  status: string = "game";
+  firstTurn: boolean = true;
   cells: SapperCellConstructor[][] = [];
-  colors: string[] = [
-    "blue",
-    "green",
-    "red",
-    "dark-blue",
-    "brown",
-    "turquoise",
-    "black",
-    "white",
-  ];
 
   constructor(
     gameMode: string,
@@ -62,7 +53,16 @@ export class SapperGameConstructor {
     this.createCells();
   }
 
-  cellHasBeenUpdated(x: number, y: number) {
+  updateCell(x: number, y: number, action: "open" | "flag") {
+    if (this.cells[y][x].isMine && this.firstTurn && action === "open") {
+      this.firstTurnLosePreventer(x, y);
+    }
+
+    if (action === "open") {
+      this.cells[y][x].open();
+      this.firstTurn = false;
+    } else this.cells[y][x].setFlag();
+
     this.checkMines(x, y);
     if (this.status === "gameover") return;
     this.openCells(x, y);
@@ -95,6 +95,41 @@ export class SapperGameConstructor {
         }
       }
     }
+  }
+
+  private firstTurnLosePreventer(x: number, y: number) {
+    let newX = Math.floor(Math.random() * this.rows);
+    let newY = Math.floor(Math.random() * this.columns);
+
+    while (this.cells[newY][newX].isMine || (newX === x && newY === y)) {
+      newX = Math.floor(Math.random() * this.rows);
+      newY = Math.floor(Math.random() * this.columns);
+    }
+
+    this.cells[newY][newX].isMine = true;
+
+    for (let i = newX - 1; i <= newX + 1; i++) {
+      for (let j = newY - 1; j <= newY + 1; j++) {
+        if (this.validateCell(j, i)) {
+          this.cells[j][i].aroundMines++;
+        }
+      }
+    }
+
+    this.cells[y][x].aroundMines = 0;
+
+    for (let i = x - 1; i <= x + 1; i++) {
+      for (let j = y - 1; j <= y + 1; j++) {
+        if (x === i && y === j) continue;
+        if (!this.validateCell(j, i)) continue;
+        this.cells[j][i].aroundMines--;
+        if (this.cells[j][i].isMine) {
+          this.cells[y][x].aroundMines++;
+        }
+      }
+    }
+
+    this.cells[y][x].isMine = false;
   }
 
   private validateCell(x: number, y: number) {
@@ -204,15 +239,12 @@ export class SapperGameConstructor {
             k >= 0 &&
             k < this.rows &&
             !newField[j][k]?.isMine
-          ) {
+          )
             newField[j][k].aroundMines++;
-            newField[j][k].color = this.colors[newField[j][k].aroundMines - 1];
-          }
         }
       }
     }
 
     this.cells = newField;
-    console.log(this.cells);
   }
 }
