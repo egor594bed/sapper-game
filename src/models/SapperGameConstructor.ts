@@ -107,7 +107,7 @@ export class SapperGameConstructor {
     if (this.cells[y][x].isOpen) this.closedCells--;
     if (!this.cells[y][x].isOpen || this.cells[y][x].aroundMines > 0) return;
 
-    const arr = new Set([`${y}:${x}`]);
+    const arr = new Set([`${x}:${y}`]);
     const opened = new Set();
 
     const searchAndOpen = (x: number, y: number) => {
@@ -122,17 +122,17 @@ export class SapperGameConstructor {
           this.closedCells--;
 
           if (cell.aroundMines === 0) {
-            arr.add(`${cell.y}:${cell.x}`);
+            arr.add(`${cell.x}:${cell.y}`);
           }
         }
       }
-      opened.add(`${y}:${x}`);
-      arr.delete(`${y}:${x}`);
+      opened.add(`${x}:${y}`);
+      arr.delete(`${x}:${y}`);
     };
 
     while (arr.size > 0) {
       const [coords] = arr.values();
-      searchAndOpen(Number(coords.split(":")[1]), Number(coords.split(":")[0]));
+      searchAndOpen(Number(coords.split(":")[0]), Number(coords.split(":")[1]));
     }
   }
 
@@ -213,5 +213,6 @@ export class SapperGameConstructor {
     }
 
     this.cells = newField;
+    console.log(this.cells);
   }
 }

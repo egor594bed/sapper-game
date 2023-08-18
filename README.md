@@ -1,40 +1,64 @@
-# .
+## https://github.com/egor594bed
 
-This template should help get you started developing with Vue 3 in Vite.
+# Описание проекта:
 
-## Recommended IDE Setup
+Sapper Game - это проект, который представляет собой игру "Сапер" на основе фреймворка Vue.js.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Настройки игры:
 
-## Type Support for `.vue` Imports in TS
+На экране настройки есть выбор уровня сложности:
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+    Простой 8x8, 10 мин
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+    Средний 16x16, 40 мин
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+    Сложный 32x16, 100 мин
 
-## Customize configuration
+    Кастомный с выбором размера поля (макс. 32x32) и количества мин (ограничение по времени зависит от количества мин)
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## Таблица лидеров:
 
-## Project Setup
+Таблица лидеров содержит по 10 игроков с наименьшим временем решения игры в каждой категории, отсортированные по возрастанию.
 
-```sh
-npm install
-```
+## Установка:
 
-### Compile and Hot-Reload for Development
+Для установки и запуска проекта вам понадобятся Node.js и npm. Выполните следующие команды:
 
-```sh
-npm run dev
-```
+### 1. Клонирование репозитория
 
-### Type-Check, Compile and Minify for Production
+    git clone `https://github.com/egor594bed/sapper-game.git`
 
-```sh
-npm run build
-```
+### 2. Переход в директорию проекта
+
+    cd sapper-game
+
+### 3. Установка зависимостей
+
+    npm install
+
+## Запуск:
+
+### Запуск в режиме разработки
+
+    npm run dev
+
+### Сборка проекта
+
+    npm run build
+
+### Предварительный просмотр собранного проекта
+
+    npm run preview
+
+### Зависимости:
+
+    @jamescoyle/vue-icon: ^0.1.2
+    @mdi/js: ^7.2.96
+    pinia: ^2.1.4
+    vue: ^3.3.4
+    vue-router: ^4.2.4
+    vuetify: ^3.3.12
+
+## Разработчик:
+
+@egor594bed

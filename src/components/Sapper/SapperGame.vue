@@ -57,8 +57,6 @@ import SapperCell from "@/components/Sapper/SapperCell.vue";
 import { SapperGameConstructor } from "@/models/SapperGameConstructor";
 import { useLeaderBoardStore } from "@/stores/leaderBoardStore";
 
-// const leaderBoardStore = useLeaderBoardStore()
-
 export default defineComponent({
   components: {
     SapperCell,
@@ -71,7 +69,6 @@ export default defineComponent({
   }),
   props: {
     settings: {
-      //Разобраться как привязать тип
       type: Object,
       required: true,
     },
@@ -79,7 +76,6 @@ export default defineComponent({
   methods: {
     updateGame(coords: { x: number; y: number }) {
       this.game.cellHasBeenUpdated(coords.x, coords.y);
-      // this.game = this.game.getGameCopy();
     },
     restartGame() {
       this.game = new SapperGameConstructor(

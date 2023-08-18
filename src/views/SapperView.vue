@@ -5,7 +5,7 @@
       @startGame="startGame($event)"
     />
     <SapperGame
-      v-if="gameStatus !== 'settings'"
+      v-else
       @setGameStatus="gameStatus = $event"
       :settings="settings"
     />
