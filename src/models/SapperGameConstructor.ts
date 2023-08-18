@@ -218,7 +218,7 @@ export class SapperGameConstructor {
 
     if (this.rows * this.columns < this.mines) {
       this.mines = this.rows * this.columns;
-      this.minesCounter = this.rows * this.columns;
+      this.minesCounter = this.rows * this.columns - 1;
     }
 
     for (let i = 0; i < this.mines; i++) {

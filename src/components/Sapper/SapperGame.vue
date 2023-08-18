@@ -64,6 +64,7 @@ export default defineComponent({
   data: () => ({
     game: {} as SapperGameConstructor,
     timer: 0,
+    timerId: 0,
     gamefieldWidth: 0,
     leaderBoardStore: useLeaderBoardStore(),
   }),
@@ -83,6 +84,7 @@ export default defineComponent({
         this.settings.customSettings
       );
       this.timer = this.game.timer;
+      clearTimeout(this.timerId);
       this.timeTick();
     },
 
@@ -90,7 +92,7 @@ export default defineComponent({
 
     timeTick() {
       if (this.game.status !== "game") return;
-      setTimeout(() => {
+      this.timerId = setTimeout(() => {
         this.timer -= 1;
         this.timeTick();
       }, 1000);
@@ -119,6 +121,7 @@ export default defineComponent({
     game: {
       handler() {
         if (this.game.status === "win") {
+          clearTimeout(this.timerId);
           this.leaderBoardStore.saveNewWinner(
             this.settings.gameMode,
             "Гость",
