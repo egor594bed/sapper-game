@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1 class="text-center">Таблица лидеров</h1>
-    <div class="d-flex justify-center mb-5 mt-5">
+    <v-tabs class="mb-5 mt-5">
       <v-btn
         @click="leaderBoardName = 'easy'"
         v-bind:color="leaderBoardName === 'easy' ? 'blue' : 'transparent'"
@@ -19,7 +19,7 @@
         class="ml-6"
         >32 на 16</v-btn
       >
-    </div>
+    </v-tabs>
     <v-table>
       <thead>
         <tr>

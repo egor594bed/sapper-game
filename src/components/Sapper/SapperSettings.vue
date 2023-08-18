@@ -36,31 +36,19 @@
     </v-tabs>
     <v-expand-transition>
       <div v-show="gameMode === 'custom'">
-        <div class="d-flex justify-space-between pa-5 pb-0">
-          <v-text-field
-            label="Ширина"
-            v-model="customSettings.rows"
-            type="number"
-            variant="outlined"
-            class="mr-2"
-            hide-details="auto"
-          ></v-text-field>
-          <v-text-field
-            label="Высота"
-            v-model="customSettings.columns"
-            type="number"
-            variant="outlined"
-            class="mr-2"
-            hide-details="auto"
-          ></v-text-field>
-          <v-text-field
-            label="Кол-во мин"
-            v-model="customSettings.mines"
-            type="number"
-            variant="outlined"
-            class="mr-2"
-            hide-details="auto"
-          ></v-text-field>
+        <div class="d-flex justify-space-between pa-5 pb-0 inputs">
+          <SapperSettingsInput
+            :label="'Ширина'"
+            v-model:value="customSettings.rows"
+          />
+          <SapperSettingsInput
+            :label="'Высота'"
+            v-model:value="customSettings.columns"
+          />
+          <SapperSettingsInput
+            :label="'Кол-во мин'"
+            v-model:value="customSettings.mines"
+          />
         </div>
       </div>
     </v-expand-transition>
@@ -73,7 +61,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import SapperSettingsInput from "./SapperSettingsInput.vue";
 export default defineComponent({
+  components: {
+    SapperSettingsInput,
+  },
   data() {
     return {
       gameMode: "easy",
@@ -99,4 +91,11 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="css" scoped>
+@media (max-width: 400px) {
+  .inputs {
+    gap: 10px;
+    flex-direction: column;
+  }
+}
+</style>

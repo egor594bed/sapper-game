@@ -1,4 +1,4 @@
-## https://github.com/egor594bed
+## https://precious-kulfi-9272a3.netlify.app/
 
 # Описание проекта:
 

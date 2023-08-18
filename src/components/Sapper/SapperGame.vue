@@ -88,8 +88,6 @@ export default defineComponent({
       this.timeTick();
     },
 
-    //ПРОВЕРИТЬ ТАЙМЕР ПРИ ПЕРЕЗАПУСКЕ
-
     timeTick() {
       if (this.game.status !== "game") return;
       this.timerId = setTimeout(() => {
@@ -120,7 +118,7 @@ export default defineComponent({
     },
     game: {
       handler() {
-        if (this.game.status === "win") {
+        if (this.game.status === "win" && this.settings.gameMode !== "custom") {
           clearTimeout(this.timerId);
           this.leaderBoardStore.saveNewWinner(
             this.settings.gameMode,
